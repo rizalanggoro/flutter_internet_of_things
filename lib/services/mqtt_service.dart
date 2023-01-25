@@ -6,11 +6,8 @@ import 'package:internet_of_things/data/values/device_data.dart';
 
 class MqttService extends GetxService {
   final Rx<MqttState> mqttState = Rx(MqttState.disconnected);
-
-  // todo: { deviceId:  { configName: data }}
-  // final Rx<Map<String, Map<String, dynamic>>> data = Rx({});
-
   final RxList<DeviceModel> listDevice = RxList();
+  final RxList<String> publishQueue = RxList([]);
 
   @override
   void onReady() {

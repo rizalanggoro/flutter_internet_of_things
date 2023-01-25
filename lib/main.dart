@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
         colorSchemeSeed: Colors.indigo,
         textTheme: GoogleFonts.poppinsTextTheme(),
       ),
+      defaultTransition: Transition.cupertino,
       initialRoute: Routes.home,
       initialBinding: InitialBinding(),
       getPages: AppPages.pages,

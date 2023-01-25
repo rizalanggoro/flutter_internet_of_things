@@ -117,7 +117,10 @@ class MqttRepository {
     // todo: listen publish
     client.published!.listen((MqttPublishMessage message) {
       var topic = message.variableHeader!.topicName;
-      print(topic);
+
+      if (_mqttService.publishQueue.contains(topic)) {
+        _mqttService.publishQueue.remove(topic);
+      }
     });
   }
 }

@@ -4,12 +4,13 @@ import 'package:internet_of_things/data/models/device_model.dart';
 import 'package:internet_of_things/data/models/mode_model.dart';
 import 'package:internet_of_things/data/repositories/mqtt_repository.dart';
 import 'package:internet_of_things/data/values/device_data.dart';
+import 'package:internet_of_things/data/values/mqtt_data.dart';
 import 'package:internet_of_things/services/mqtt_service.dart';
 
 class DeviceController extends GetxController {
   final listMode = DeviceData.listModeLedStrip;
   final MqttRepository _mqttRepository = Get.find();
-  final MqttService _mqttService = Get.find();
+  final MqttService mqttService = Get.find();
 
   final Rx<double> brightness = Rx(100);
   final Rx<ModeModel?> mode = Rx(null);
@@ -21,7 +22,6 @@ class DeviceController extends GetxController {
     super.onInit();
 
     var model = Get.arguments as DeviceModel;
-    var deviceId = model.id;
     var configModel = model.config;
 
     // todo: set mode from server
@@ -80,6 +80,8 @@ class DeviceController extends GetxController {
 
   void changeColor(Color color) => this.color.value = color;
 
+  bool get isPublishing => mqttService.publishQueue.isNotEmpty;
+
   void publish({
     required DeviceModel model,
   }) {
@@ -109,5 +111,19 @@ class DeviceController extends GetxController {
       specificTopic: 'color',
       payload: '$r.$g.$b',
     );
+
+    // todo: add publish queue
+    var listTopics = [
+      'mode',
+      'brightness',
+      'speed',
+      'color',
+    ];
+    listTopics = listTopics
+        .map(
+          (e) => '${MqttData.prefix}-${model.id}/$e',
+        )
+        .toList();
+    mqttService.publishQueue.addAll(listTopics);
   }
 }

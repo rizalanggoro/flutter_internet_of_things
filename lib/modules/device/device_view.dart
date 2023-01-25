@@ -362,28 +362,34 @@ class DeviceView extends GetView<DeviceController> {
               ),
               child: Material(
                 color: Colors.transparent,
-                child: InkWell(
-                  onTap: () => controller.publish(
-                    model: model,
-                  ),
-                  child: SizedBox(
-                    height: 48,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.upload_rounded,
-                          color: colorScheme.onPrimary,
-                          size: textTheme.bodyLarge!.fontSize,
-                        ),
-                        const SizedBox(width: 16),
-                        Text(
-                          'Publish',
-                          style: TextStyle(
+                child: Obx(
+                  () => InkWell(
+                    onTap: controller.isPublishing
+                        ? null
+                        : () => controller.publish(model: model),
+                    child: SizedBox(
+                      height: 48,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            controller.isPublishing
+                                ? Icons.sync_rounded
+                                : Icons.upload_rounded,
                             color: colorScheme.onPrimary,
+                            size: textTheme.bodyLarge!.fontSize,
                           ),
-                        ),
-                      ],
+                          const SizedBox(width: 16),
+                          Text(
+                            controller.isPublishing
+                                ? 'Publishing...'
+                                : 'Publish',
+                            style: TextStyle(
+                              color: colorScheme.onPrimary,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

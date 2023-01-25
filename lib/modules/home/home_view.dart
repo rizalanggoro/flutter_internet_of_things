@@ -140,10 +140,19 @@ class HomeView extends GetView<HomeController> {
               (listDevice) => ListView.builder(
                 itemBuilder: (context, index) {
                   var model = listDevice[index];
+                  var modelConfig = model.config;
 
-                  return _listItemDevice(
-                    index: index,
-                    model: model,
+                  var enabled = modelConfig.status != null &&
+                      controller.mqttService.mqttState.value ==
+                          MqttState.connected;
+
+                  return Opacity(
+                    opacity: enabled ? 1 : .64,
+                    child: _listItemDevice(
+                      enabled: enabled,
+                      index: index,
+                      model: model,
+                    ),
                   );
                 },
                 itemCount: listDevice.length,
@@ -160,12 +169,13 @@ class HomeView extends GetView<HomeController> {
   }
 
   Container _listItemDevice({
+    required bool enabled,
     required int index,
     required DeviceModel model,
   }) {
     var colorScheme = Get.theme.colorScheme;
     var textTheme = Get.textTheme;
-    var isOnline = model.config?.status == 'on';
+    var isOnline = model.config.status == 'on';
 
     return Container(
       clipBehavior: Clip.hardEdge,
@@ -187,7 +197,7 @@ class HomeView extends GetView<HomeController> {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () => controller.showDevice(model),
+          onTap: enabled ? () => controller.showDevice(model) : null,
           child: Container(
             padding: const EdgeInsets.all(16),
             child: Row(
