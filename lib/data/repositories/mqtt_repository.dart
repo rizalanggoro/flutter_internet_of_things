@@ -1,7 +1,6 @@
-import 'dart:math';
-
 import 'package:get/get.dart';
 import 'package:internet_of_things/data/enums/mqtt_state.dart';
+import 'package:internet_of_things/data/values/device_data.dart';
 import 'package:internet_of_things/data/values/mqtt_data.dart';
 import 'package:internet_of_things/services/mqtt_service.dart';
 import 'package:mqtt_client/mqtt_client.dart';
@@ -25,6 +24,7 @@ class MqttRepository {
         topic,
         MqttQos.exactlyOnce,
         data.payload!,
+        retain: true,
       );
     }
   }
@@ -56,6 +56,7 @@ class MqttRepository {
 
   void _onConnected() {
     _mqttService.mqttState.value = MqttState.connected;
+    _listenUpdates();
   }
 
   void _onDisconnected() {
@@ -68,5 +69,55 @@ class MqttRepository {
 
   void _onAutoReconnected() {
     _mqttService.mqttState.value = MqttState.connected;
+    _listenUpdates();
+  }
+
+  void _listenUpdates() {
+    // todo: subscribe to all devices
+    for (var model in DeviceData.listDevices) {
+      var topic = '${MqttData.prefix}-${model.id}/#';
+
+      client.subscribe(topic, MqttQos.exactlyOnce);
+    }
+
+    // todo: listen update from broker
+    client.updates!.listen(
+      (List<MqttReceivedMessage<MqttMessage?>>? message) {
+        final topic = message![0].topic;
+        final recMessage = message[0].payload as MqttPublishMessage;
+        final payload = MqttPublishPayload.bytesToStringAsString(
+          recMessage.payload.message,
+        );
+
+        var deviceId =
+            topic.substring(MqttData.prefix.length + 1, topic.indexOf('/'));
+        var configKey = topic.substring(topic.indexOf('/') + 1);
+        var listConfigIndex = _mqttService.listDevice
+            .indexWhere((element) => element.id == deviceId);
+
+        if (listConfigIndex != -1) {
+          if (configKey == 'mode') {
+            _mqttService.listDevice[listConfigIndex].config.mode = payload;
+          } else if (configKey == 'brightness') {
+            _mqttService.listDevice[listConfigIndex].config.brightness =
+                payload;
+          } else if (configKey == 'speed') {
+            _mqttService.listDevice[listConfigIndex].config.speed = payload;
+          } else if (configKey == 'color') {
+            _mqttService.listDevice[listConfigIndex].config.color = payload;
+          } else if (configKey == 'status') {
+            _mqttService.listDevice[listConfigIndex].config.status = payload;
+          }
+
+          _mqttService.listDevice.refresh();
+        }
+      },
+    );
+
+    // todo: listen publish
+    client.published!.listen((MqttPublishMessage message) {
+      var topic = message.variableHeader!.topicName;
+      print(topic);
+    });
   }
 }

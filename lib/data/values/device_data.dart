@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:internet_of_things/data/enums/device_type.dart';
+import 'package:internet_of_things/data/models/device_config_model.dart';
 import 'package:internet_of_things/data/models/device_model.dart';
 import 'package:internet_of_things/data/models/mode_model.dart';
 
@@ -10,18 +11,14 @@ class DeviceData {
       name: 'Desk LED',
       iconData: Icons.emoji_objects_rounded,
       deviceType: DeviceType.ledStrip,
+      config: DeviceConfigModel(),
     ),
     DeviceModel(
-      id: 'desk_led',
-      name: 'Desk LED',
+      id: 'bedroom_led',
+      name: 'Bedroom LED',
       iconData: Icons.emoji_objects_rounded,
       deviceType: DeviceType.ledStrip,
-    ),
-    DeviceModel(
-      id: 'desk_led',
-      name: 'Desk LED',
-      iconData: Icons.emoji_objects_rounded,
-      deviceType: DeviceType.ledStrip,
+      config: DeviceConfigModel(),
     ),
   ];
 

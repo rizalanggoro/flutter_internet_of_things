@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:get/get.dart';
 import 'package:internet_of_things/data/models/device_model.dart';
 import 'package:internet_of_things/data/values/mqtt_data.dart';
@@ -20,6 +21,7 @@ class DeviceView extends GetView<DeviceController> {
       body: Stack(
         children: [
           SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -221,6 +223,121 @@ class DeviceView extends GetView<DeviceController> {
                 ),
 
                 // todo: speed
+                CustomCard(
+                  margin: const EdgeInsets.only(
+                    left: 32,
+                    right: 32,
+                    top: 8,
+                  ),
+                  padding: const EdgeInsets.all(16),
+                  body: Row(
+                    children: [
+                      Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: colorScheme.primaryContainer,
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(12),
+                          ),
+                        ),
+                        child: Icon(
+                          Icons.speed_rounded,
+                          color: colorScheme.primary,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Speed',
+                              style: TextStyle(
+                                color: colorScheme.onBackground,
+                                fontSize: textTheme.bodyLarge!.fontSize,
+                              ),
+                            ),
+                            ObxValue(
+                              (speed) => Text(
+                                '${speed.value} ms',
+                                style: TextStyle(
+                                  color:
+                                      colorScheme.onBackground.withOpacity(.64),
+                                  fontSize: textTheme.bodyMedium!.fontSize,
+                                ),
+                              ),
+                              controller.speed,
+                            ),
+                          ],
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () => controller.decreaseSpeed(),
+                        icon: Icon(
+                          Icons.remove_rounded,
+                          color: colorScheme.secondary,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () => controller.increaseSpeed(),
+                        icon: Icon(
+                          Icons.add_rounded,
+                          color: colorScheme.secondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // todo: color
+                CustomCard(
+                  margin: const EdgeInsets.only(
+                    left: 32,
+                    right: 32,
+                    top: 8,
+                  ),
+                  body: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 16,
+                          top: 16,
+                          bottom: 16,
+                        ),
+                        child: Text(
+                          'Color',
+                          style: TextStyle(
+                            fontSize: textTheme.bodyLarge!.fontSize,
+                            color: colorScheme.primary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      ObxValue(
+                        (color) => ColorPicker(
+                          pickerColor: color.value,
+                          onColorChanged: (value) =>
+                              controller.changeColor(value),
+                          enableAlpha: false,
+                          hexInputBar: false,
+                          labelTypes: const [],
+                          displayThumbColor: false,
+                          pickerAreaBorderRadius: const BorderRadius.all(
+                            Radius.circular(8),
+                          ),
+                        ),
+                        controller.color,
+                      ),
+                    ],
+                  ),
+                ),
+
+                // todo: spacer
+                const SizedBox(
+                  height: 48 + 64,
+                ),
               ],
             ),
           ),
