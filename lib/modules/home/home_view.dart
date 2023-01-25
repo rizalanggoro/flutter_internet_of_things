@@ -140,11 +140,7 @@ class HomeView extends GetView<HomeController> {
               (listDevice) => ListView.builder(
                 itemBuilder: (context, index) {
                   var model = listDevice[index];
-                  var modelConfig = model.config;
-
-                  var enabled = modelConfig.status != null &&
-                      controller.mqttService.mqttState.value ==
-                          MqttState.connected;
+                  var enabled = controller.isDeviceEnabled(model);
 
                   return Opacity(
                     opacity: enabled ? 1 : .64,
