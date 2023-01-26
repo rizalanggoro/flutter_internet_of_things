@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:internet_of_things/bindings/initial_binding.dart';
-import 'package:internet_of_things/routes/app_pages.dart';
+
+import 'bindings/initial_binding.dart';
+import 'routes/app_pages.dart';
 
 void main() {
   runApp(const MyApp());

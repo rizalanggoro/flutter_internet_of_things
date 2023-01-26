@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
-import 'package:internet_of_things/data/repositories/mqtt_repository.dart';
-import 'package:internet_of_things/services/mqtt_service.dart';
+
+import '../data/repositories/mqtt_repository.dart';
+import '../services/mqtt_service.dart';
 
 class InitialBinding extends Bindings {
   @override

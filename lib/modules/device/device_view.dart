@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:get/get.dart';
-import 'package:internet_of_things/data/models/device_model.dart';
-import 'package:internet_of_things/data/values/mqtt_data.dart';
-import 'package:internet_of_things/modules/device/device_controller.dart';
-import 'package:internet_of_things/widgets/custom_card.dart';
+
+import '../../data/models/device_model.dart';
+import '../../data/values/mqtt_data.dart';
+import '../../widgets/custom_card.dart';
+import 'device_controller.dart';
 
 class DeviceView extends GetView<DeviceController> {
   const DeviceView({super.key});
@@ -40,8 +41,8 @@ class DeviceView extends GetView<DeviceController> {
                     color: colorScheme.primaryContainer,
                   ),
                   margin: const EdgeInsets.only(
-                    left: 32,
-                    top: 32,
+                    left: 24,
+                    top: 24,
                   ),
                   child: Material(
                     color: Colors.transparent,
@@ -58,9 +59,9 @@ class DeviceView extends GetView<DeviceController> {
                 // todo: title
                 Padding(
                   padding: const EdgeInsets.only(
-                    left: 32,
-                    right: 32,
-                    top: 32,
+                    left: 24,
+                    right: 24,
+                    top: 24,
                   ),
                   child: Text(
                     model.name,
@@ -73,8 +74,8 @@ class DeviceView extends GetView<DeviceController> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
-                    left: 32,
-                    right: 32,
+                    left: 24,
+                    right: 24,
                   ),
                   child: Text(
                     model.id,
@@ -86,8 +87,8 @@ class DeviceView extends GetView<DeviceController> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
-                    left: 32,
-                    right: 32,
+                    left: 24,
+                    right: 24,
                   ),
                   child: Text(
                     '${MqttData.prefix}-${model.id}',
@@ -101,9 +102,9 @@ class DeviceView extends GetView<DeviceController> {
                 // todo: mode
                 CustomCard(
                   margin: const EdgeInsets.only(
-                    left: 32,
-                    right: 32,
-                    top: 32,
+                    left: 24,
+                    right: 24,
+                    top: 24,
                   ),
                   body: Material(
                     color: Colors.transparent,
@@ -166,8 +167,8 @@ class DeviceView extends GetView<DeviceController> {
                 // todo: brightness
                 CustomCard(
                   margin: const EdgeInsets.only(
-                    left: 32,
-                    right: 32,
+                    left: 24,
+                    right: 24,
                     top: 8,
                   ),
                   body: Column(
@@ -225,8 +226,8 @@ class DeviceView extends GetView<DeviceController> {
                 // todo: speed
                 CustomCard(
                   margin: const EdgeInsets.only(
-                    left: 32,
-                    right: 32,
+                    left: 24,
+                    right: 24,
                     top: 8,
                   ),
                   padding: const EdgeInsets.all(16),
@@ -293,8 +294,8 @@ class DeviceView extends GetView<DeviceController> {
                 // todo: color
                 CustomCard(
                   margin: const EdgeInsets.only(
-                    left: 32,
-                    right: 32,
+                    left: 24,
+                    right: 24,
                     top: 8,
                   ),
                   body: Column(
@@ -336,7 +337,7 @@ class DeviceView extends GetView<DeviceController> {
 
                 // todo: spacer
                 const SizedBox(
-                  height: 48 + 64,
+                  height: 48 + 48,
                 ),
               ],
             ),
@@ -347,7 +348,7 @@ class DeviceView extends GetView<DeviceController> {
             alignment: Alignment.bottomCenter,
             child: Container(
               clipBehavior: Clip.hardEdge,
-              margin: const EdgeInsets.all(32),
+              margin: const EdgeInsets.all(24),
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
@@ -395,6 +396,39 @@ class DeviceView extends GetView<DeviceController> {
                 ),
               ),
             ),
+          ),
+
+          // todo: container publish
+          Obx(
+            () => controller.isPublishing
+                ? Container(
+                    width: double.infinity,
+                    color: colorScheme.onBackground.withOpacity(.84),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Text(
+                          'Publishing',
+                          style: TextStyle(
+                            color: colorScheme.background,
+                            fontSize: textTheme.headlineSmall!.fontSize,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Please wait a moment...',
+                          style: TextStyle(
+                            color: colorScheme.background.withOpacity(.64),
+                            fontSize: textTheme.bodyLarge!.fontSize,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : Container(),
           ),
         ],
       ),

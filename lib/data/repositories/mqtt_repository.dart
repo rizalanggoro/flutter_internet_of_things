@@ -1,10 +1,11 @@
 import 'package:get/get.dart';
-import 'package:internet_of_things/data/enums/mqtt_state.dart';
-import 'package:internet_of_things/data/values/device_data.dart';
-import 'package:internet_of_things/data/values/mqtt_data.dart';
-import 'package:internet_of_things/services/mqtt_service.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
+
+import '../../services/mqtt_service.dart';
+import '../enums/mqtt_state.dart';
+import '../values/device_data.dart';
+import '../values/mqtt_data.dart';
 
 class MqttRepository {
   late MqttServerClient client;

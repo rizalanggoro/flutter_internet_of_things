@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:internet_of_things/data/enums/device_type.dart';
-import 'package:internet_of_things/data/models/device_config_model.dart';
-import 'package:internet_of_things/data/models/device_model.dart';
-import 'package:internet_of_things/data/models/mode_model.dart';
+
+import '../enums/device_type.dart';
+import '../models/device_config_model.dart';
+import '../models/device_model.dart';
+import '../models/mode_model.dart';
 
 class DeviceData {
   static final List<DeviceModel> listDevices = [

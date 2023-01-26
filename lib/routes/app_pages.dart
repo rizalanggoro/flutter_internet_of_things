@@ -1,12 +1,16 @@
 import 'package:get/get.dart';
-import 'package:internet_of_things/modules/device/device_binding.dart';
-import 'package:internet_of_things/modules/device/device_view.dart';
-import 'package:internet_of_things/modules/home/home_binding.dart';
-import 'package:internet_of_things/modules/home/home_view.dart';
+
+import '../modules/device/device_binding.dart';
+import '../modules/device/device_view.dart';
+import '../modules/home/home_binding.dart';
+import '../modules/home/home_view.dart';
+import '../modules/pick_mode/pick_mode_binding.dart';
+import '../modules/pick_mode/pick_mode_view.dart';
 
 class Routes {
   static const home = '/';
   static const device = '/device';
+  static const pickMode = '/pick-mode';
 }
 
 class AppPages {
@@ -20,6 +24,11 @@ class AppPages {
       name: Routes.device,
       page: () => const DeviceView(),
       binding: DeviceBinding(),
+    ),
+    GetPage(
+      name: Routes.pickMode,
+      page: () => const PickModeView(),
+      binding: PickModeBinding(),
     ),
   ];
 }

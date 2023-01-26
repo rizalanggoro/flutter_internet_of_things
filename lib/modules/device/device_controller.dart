@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:internet_of_things/data/models/device_model.dart';
-import 'package:internet_of_things/data/models/mode_model.dart';
-import 'package:internet_of_things/data/repositories/mqtt_repository.dart';
-import 'package:internet_of_things/data/values/device_data.dart';
-import 'package:internet_of_things/data/values/mqtt_data.dart';
-import 'package:internet_of_things/services/mqtt_service.dart';
+
+import '../../data/models/device_model.dart';
+import '../../data/models/mode_model.dart';
+import '../../data/repositories/mqtt_repository.dart';
+import '../../data/values/device_data.dart';
+import '../../data/values/mqtt_data.dart';
+import '../../services/mqtt_service.dart';
 
 class DeviceController extends GetxController {
   final listMode = DeviceData.listModeLedStrip;
