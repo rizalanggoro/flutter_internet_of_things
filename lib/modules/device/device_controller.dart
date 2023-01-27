@@ -46,14 +46,14 @@ class DeviceController extends GetxController {
     var serverAutoEnable = configModel.autoEnable;
     if (serverAutoEnable != null) {
       autoEnable.value = serverAutoEnable == '1';
-      autoEnableFv = autoEnable.value;
+      autoEnableFv = serverAutoEnable == '1';
     }
 
     // todo: set auto delay from server
     var serverAutoDelay = configModel.autoDelay;
     if (serverAutoDelay != null) {
       autoDelay.value = int.parse(serverAutoDelay);
-      autoDelayFv = autoDelay.value;
+      autoDelayFv = int.parse(serverAutoDelay);
     }
 
     // todo: set auto values from server
@@ -62,7 +62,9 @@ class DeviceController extends GetxController {
       autoValues.value = Map<String, dynamic>.from(
         jsonDecode(serverAutoValues),
       );
-      autoValuesFv = autoValues;
+      autoValuesFv = Map<String, dynamic>.from(
+        jsonDecode(serverAutoValues),
+      );
     }
 
     // todo: set mode from server
@@ -72,21 +74,23 @@ class DeviceController extends GetxController {
       mode.value = listMode.firstWhere(
         (element) => element.id == int.parse(serverMode),
       );
-      modeFv = mode.value;
+      modeFv = listMode.firstWhere(
+        (element) => element.id == int.parse(serverMode),
+      );
     }
 
     // todo: set brightness from server
     var serverBrightness = configModel.brightness;
     if (serverBrightness != null) {
       brightness.value = double.parse(serverBrightness);
-      brightnessFv = brightness.value;
+      brightnessFv = double.parse(serverBrightness);
     }
 
     // todo: set speed from server
     var serverSpeed = configModel.speed;
     if (serverSpeed != null) {
       speed.value = int.parse(serverSpeed);
-      speedFv = speed.value;
+      speedFv = int.parse(serverSpeed);
     }
 
     // todo: set color from server
@@ -97,7 +101,7 @@ class DeviceController extends GetxController {
       var g = int.parse(colors[1]);
       var b = int.parse(colors[2]);
       color.value = Color.fromARGB(255, r, g, b);
-      colorFv = color.value;
+      colorFv = Color.fromARGB(255, r, g, b);
     }
   }
 
