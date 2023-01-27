@@ -6,11 +6,14 @@ import '../modules/home/home_binding.dart';
 import '../modules/home/home_view.dart';
 import '../modules/pick_mode/pick_mode_binding.dart';
 import '../modules/pick_mode/pick_mode_view.dart';
+import '../modules/reset/reset_binding.dart';
+import '../modules/reset/reset_view.dart';
 
 class Routes {
   static const home = '/';
   static const device = '/device';
   static const pickMode = '/pick-mode';
+  static const reset = '/reset';
 }
 
 class AppPages {
@@ -29,6 +32,11 @@ class AppPages {
       name: Routes.pickMode,
       page: () => const PickModeView(),
       binding: PickModeBinding(),
+    ),
+    GetPage(
+      name: Routes.reset,
+      page: () => const ResetView(),
+      binding: ResetBinding(),
     ),
   ];
 }

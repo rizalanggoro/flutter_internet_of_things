@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../data/enums/mqtt_state.dart';
 import '../../data/models/device_model.dart';
 import '../../data/values/mqtt_data.dart';
+import '../../routes/app_pages.dart';
 import '../../widgets/custom_card.dart';
 import 'home_controller.dart';
 
@@ -13,10 +14,11 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     var textTheme = Get.textTheme;
-    var colorScheme = Get.theme.colorScheme;
+    var colorScheme = context.theme.colorScheme;
+    var isDark = Get.isDarkMode;
 
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
+      backgroundColor: isDark ? Colors.black : Colors.grey.shade50,
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(
@@ -36,6 +38,55 @@ class HomeView extends GetView<HomeController> {
                 style: TextStyle(
                   fontSize: textTheme.headlineSmall!.fontSize,
                   fontWeight: FontWeight.bold,
+                  color: colorScheme.onBackground,
+                ),
+              ),
+            ),
+
+            // todo: card dark mode
+            CustomCard(
+              margin: const EdgeInsets.only(
+                left: 24,
+                right: 24,
+                top: 24,
+              ),
+              body: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Container(
+                      height: 48,
+                      width: 48,
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(12),
+                        ),
+                        color: colorScheme.primaryContainer,
+                      ),
+                      child: Icon(
+                        Icons.wb_sunny_rounded,
+                        color: colorScheme.primary,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Text(
+                        'Dark mode',
+                        style: TextStyle(
+                          color: colorScheme.onBackground,
+                          fontSize: textTheme.bodyLarge!.fontSize,
+                        ),
+                      ),
+                    ),
+                    ObxValue(
+                      (isDark) => Switch(
+                        value: isDark.value,
+                        onChanged: (value) =>
+                            controller.changeAppBrightness(value),
+                      ),
+                      controller.isDark,
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -45,7 +96,7 @@ class HomeView extends GetView<HomeController> {
               margin: const EdgeInsets.only(
                 left: 24,
                 right: 24,
-                top: 24,
+                top: 8,
               ),
               padding: const EdgeInsets.all(16),
               body: Row(
@@ -131,7 +182,7 @@ class HomeView extends GetView<HomeController> {
               (listDevice) => ListView.builder(
                 itemBuilder: (context, index) {
                   var model = listDevice[index];
-                  var enabled = controller.isDeviceEnabled(model);
+                  var enabled = model.config.isReady;
 
                   return Opacity(
                     opacity: enabled ? 1 : .64,
@@ -149,6 +200,70 @@ class HomeView extends GetView<HomeController> {
               ),
               controller.mqttService.listDevice,
             ),
+
+            // todo: card reset device
+            CustomCard(
+              margin: const EdgeInsets.only(
+                left: 24,
+                right: 24,
+                top: 48,
+                bottom: 48,
+              ),
+              body: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onLongPress: () => Get.toNamed(Routes.reset),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      children: [
+                        Container(
+                          height: 48,
+                          width: 48,
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(12),
+                            ),
+                            color: colorScheme.errorContainer,
+                          ),
+                          child: Icon(
+                            Icons.restore_rounded,
+                            color: colorScheme.error,
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Reset device',
+                                style: TextStyle(
+                                  color: colorScheme.error,
+                                  fontSize: textTheme.bodyLarge!.fontSize,
+                                ),
+                              ),
+                              Text(
+                                'This action is irreversible',
+                                style: TextStyle(
+                                  color: colorScheme.error.withOpacity(.64),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Icon(
+                          Icons.chevron_right_rounded,
+                          color: colorScheme.onBackground.withOpacity(.32),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 48),
           ],
         ),
       ),

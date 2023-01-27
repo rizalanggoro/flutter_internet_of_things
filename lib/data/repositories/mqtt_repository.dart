@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:internet_of_things/data/models/device_model.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 
@@ -108,6 +109,14 @@ class MqttRepository {
             _mqttService.listDevice[listConfigIndex].config.color = payload;
           } else if (configKey == 'status') {
             _mqttService.listDevice[listConfigIndex].config.status = payload;
+          } else if (configKey == 'auto') {
+            _mqttService.listDevice[listConfigIndex].config.autoEnable =
+                payload;
+          } else if (configKey == 'auto_delay') {
+            _mqttService.listDevice[listConfigIndex].config.autoDelay = payload;
+          } else if (configKey == 'auto_values') {
+            _mqttService.listDevice[listConfigIndex].config.autoValues =
+                payload;
           }
 
           _mqttService.listDevice.refresh();
@@ -124,4 +133,8 @@ class MqttRepository {
       }
     });
   }
+
+  void resetDefaultConfig({
+    required DeviceModel model,
+  }) {}
 }

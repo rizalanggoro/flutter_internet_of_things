@@ -18,7 +18,7 @@ class DeviceView extends GetView<DeviceController> {
     var textTheme = Get.textTheme;
 
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
+      backgroundColor: Get.isDarkMode ? Colors.black : Colors.grey.shade50,
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -99,7 +99,7 @@ class DeviceView extends GetView<DeviceController> {
                   ),
                 ),
 
-                // todo: mode
+                // todo: auto
                 CustomCard(
                   margin: const EdgeInsets.only(
                     left: 24,
@@ -109,10 +109,151 @@ class DeviceView extends GetView<DeviceController> {
                   body: Material(
                     color: Colors.transparent,
                     child: InkWell(
-                      onTap: () => _showBottomSheetPickMode(),
+                      onTap: () => controller.changeAutoEnable(),
                       child: Container(
                         padding: const EdgeInsets.all(16),
                         child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              height: 48,
+                              width: 48,
+                              decoration: BoxDecoration(
+                                color: colorScheme.primaryContainer,
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(12),
+                                ),
+                              ),
+                              child: Icon(
+                                Icons.auto_mode_rounded,
+                                color: colorScheme.primary,
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Auto',
+                                    style: TextStyle(
+                                      color: colorScheme.onBackground,
+                                      fontSize: textTheme.bodyLarge!.fontSize,
+                                    ),
+                                  ),
+                                  Text(
+                                    'The mode will change automatically according to the specified interval',
+                                    style: TextStyle(
+                                      color: colorScheme.onBackground
+                                          .withOpacity(.64),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Obx(
+                              () => Switch(
+                                value: controller.autoEnable.value,
+                                onChanged: (_) => controller.changeAutoEnable(),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                // todo: auto delay
+                ObxValue(
+                  (autoEnable) => autoEnable.value
+                      ? CustomCard(
+                          margin: const EdgeInsets.only(
+                            left: 24,
+                            right: 24,
+                            top: 8,
+                          ),
+                          padding: const EdgeInsets.all(16),
+                          body: Row(
+                            children: [
+                              Container(
+                                width: 48,
+                                height: 48,
+                                decoration: BoxDecoration(
+                                  color: colorScheme.primaryContainer,
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(12),
+                                  ),
+                                ),
+                                child: Icon(
+                                  Icons.speed_rounded,
+                                  color: colorScheme.primary,
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Auto interval',
+                                      style: TextStyle(
+                                        color: colorScheme.onBackground,
+                                        fontSize: textTheme.bodyLarge!.fontSize,
+                                      ),
+                                    ),
+                                    ObxValue(
+                                      (autoDelay) => Text(
+                                        '${autoDelay.value} ms',
+                                        style: TextStyle(
+                                          color: colorScheme.onBackground
+                                              .withOpacity(.64),
+                                          fontSize:
+                                              textTheme.bodyMedium!.fontSize,
+                                        ),
+                                      ),
+                                      controller.autoDelay,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: () => controller.decreaseAutoDelay(),
+                                icon: Icon(
+                                  Icons.remove_rounded,
+                                  color: colorScheme.secondary,
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: () => controller.increaseAutoDelay(),
+                                icon: Icon(
+                                  Icons.add_rounded,
+                                  color: colorScheme.secondary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : Container(),
+                  controller.autoEnable,
+                ),
+
+                // todo: mode
+                CustomCard(
+                  margin: const EdgeInsets.only(
+                    left: 24,
+                    right: 24,
+                    top: 8,
+                  ),
+                  body: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () => controller.selectMode(),
+                      child: Container(
+                        padding: const EdgeInsets.all(16),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
                               height: 48,
@@ -141,21 +282,65 @@ class DeviceView extends GetView<DeviceController> {
                                     ),
                                   ),
                                   ObxValue(
-                                    (mode) => Text(
-                                      mode.value?.name ?? 'No data',
-                                      style: TextStyle(
-                                        color: colorScheme.onBackground
-                                            .withOpacity(.64),
-                                      ),
-                                    ),
-                                    controller.mode,
+                                    (autoEnable) {
+                                      var isAuto = autoEnable.value;
+
+                                      if (!isAuto) {
+                                        return ObxValue(
+                                          (mode) => Text(
+                                            mode.value?.name ?? 'No data',
+                                            style: TextStyle(
+                                              color: colorScheme.onBackground
+                                                  .withOpacity(.64),
+                                            ),
+                                          ),
+                                          controller.mode,
+                                        );
+                                      } else {
+                                        return ObxValue(
+                                          (autoValues) {
+                                            var count = autoValues['n'];
+                                            var selectedMultipleMode =
+                                                controller.listMode
+                                                    .where(
+                                                      (element) => (controller
+                                                                  .autoValues[
+                                                              'v'] as List)
+                                                          .contains(element.id),
+                                                    )
+                                                    .map((e) => e.name)
+                                                    .toList();
+
+                                            return Text(
+                                              count > 0
+                                                  ? selectedMultipleMode
+                                                      .toString()
+                                                      .replaceAll('[', '')
+                                                      .replaceAll(']', '')
+                                                  : 'All',
+                                              style: TextStyle(
+                                                color: colorScheme.onBackground
+                                                    .withOpacity(.64),
+                                              ),
+                                            );
+                                          },
+                                          controller.autoValues,
+                                        );
+                                      }
+                                    },
+                                    controller.autoEnable,
                                   ),
                                 ],
                               ),
                             ),
-                            Icon(
-                              Icons.chevron_right_rounded,
-                              color: colorScheme.onBackground.withOpacity(.32),
+                            SizedBox(
+                              width: 48,
+                              height: 48,
+                              child: Icon(
+                                Icons.chevron_right_rounded,
+                                color:
+                                    colorScheme.onBackground.withOpacity(.32),
+                              ),
                             ),
                           ],
                         ),
@@ -432,109 +617,6 @@ class DeviceView extends GetView<DeviceController> {
           ),
         ],
       ),
-    );
-  }
-
-  void _showBottomSheetPickMode() {
-    var textTheme = Get.textTheme;
-    var colorScheme = Get.theme.colorScheme;
-
-    showModalBottomSheet(
-      context: Get.context!,
-      isScrollControlled: true,
-      builder: (context) {
-        return SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 32,
-                  right: 32,
-                  top: 32,
-                ),
-                child: Text(
-                  'Select mode',
-                  style: TextStyle(
-                    color: colorScheme.onBackground,
-                    fontWeight: FontWeight.bold,
-                    fontSize: textTheme.headlineSmall!.fontSize,
-                  ),
-                ),
-              ),
-
-              // todo: list mode
-              ListView.builder(
-                itemBuilder: (context, index) {
-                  var model = controller.listMode[index];
-                  var isSelected = controller.isModeSelected(model);
-
-                  return Column(
-                    children: [
-                      // todo: divider
-                      if (index != 0)
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 32),
-                          color: colorScheme.onBackground.withOpacity(.08),
-                          width: double.infinity,
-                          height: 1.32,
-                        ),
-
-                      Container(
-                        margin: EdgeInsets.only(
-                          top: index == 0 ? 16 : 0,
-                          bottom:
-                              index == controller.listMode.length - 1 ? 32 : 0,
-                        ),
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            onTap: () => controller.changeMode(model),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(vertical: 12),
-                              child: Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                      left: 32,
-                                      right: 16,
-                                    ),
-                                    child: Icon(
-                                      isSelected
-                                          ? Icons.radio_button_checked_rounded
-                                          : Icons
-                                              .radio_button_unchecked_rounded,
-                                      color: isSelected
-                                          ? colorScheme.primary
-                                          : colorScheme.primary
-                                              .withOpacity(.32),
-                                    ),
-                                  ),
-                                  Text(
-                                    model.name,
-                                    style: TextStyle(
-                                      color: colorScheme.onBackground,
-                                      fontSize: textTheme.bodyLarge!.fontSize,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                },
-                shrinkWrap: true,
-                itemCount: controller.listMode.length,
-                physics: const NeverScrollableScrollPhysics(),
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 }

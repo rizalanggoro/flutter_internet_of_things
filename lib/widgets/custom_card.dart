@@ -5,9 +5,11 @@ class CustomCard extends GetView {
   final Widget body;
   final EdgeInsets? margin;
   final EdgeInsets? padding;
+  final Color? color;
 
   const CustomCard({
     super.key,
+    this.color,
     this.padding,
     this.margin,
     required this.body,
@@ -15,6 +17,8 @@ class CustomCard extends GetView {
 
   @override
   Widget build(BuildContext context) {
+    var isDark = Get.isDarkMode;
+
     return Container(
       width: double.infinity,
       margin: margin,
@@ -23,11 +27,14 @@ class CustomCard extends GetView {
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(.08),
+            color: isDark
+                ? Colors.white.withOpacity(.08)
+                : Colors.black.withOpacity(.08),
             blurRadius: 8,
           ),
         ],
-        color: Colors.white,
+        color: color ??
+            (isDark ? const Color.fromARGB(255, 24, 24, 24) : Colors.white),
         borderRadius: const BorderRadius.all(
           Radius.circular(16),
         ),
