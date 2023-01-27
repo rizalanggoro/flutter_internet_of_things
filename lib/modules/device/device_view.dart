@@ -588,7 +588,9 @@ class DeviceView extends GetView<DeviceController> {
             () => controller.isPublishing
                 ? Container(
                     width: double.infinity,
-                    color: colorScheme.onBackground.withOpacity(.84),
+                    color: Get.isDarkMode
+                        ? Colors.black.withOpacity(.84)
+                        : colorScheme.onBackground.withOpacity(.84),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -597,7 +599,9 @@ class DeviceView extends GetView<DeviceController> {
                         Text(
                           'Publishing',
                           style: TextStyle(
-                            color: colorScheme.background,
+                            color: Get.isDarkMode
+                                ? colorScheme.onBackground
+                                : colorScheme.background,
                             fontSize: textTheme.headlineSmall!.fontSize,
                             fontWeight: FontWeight.bold,
                           ),
@@ -606,7 +610,9 @@ class DeviceView extends GetView<DeviceController> {
                         Text(
                           'Please wait a moment...',
                           style: TextStyle(
-                            color: colorScheme.background.withOpacity(.64),
+                            color: Get.isDarkMode
+                                ? colorScheme.onBackground.withOpacity(.64)
+                                : colorScheme.background.withOpacity(.64),
                             fontSize: textTheme.bodyLarge!.fontSize,
                           ),
                         ),
